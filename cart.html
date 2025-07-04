@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - MyStore</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; text-align: center; }
+    h1 { color: #333; margin-bottom: 20px; }
+    #cart-items { max-width: 600px; margin: 0 auto; text-align: left; }
+    .cart-item { background: #fff; padding: 10px; border-radius: 5px; margin-bottom: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .cart-details { flex: 1; }
+    #cart-total { margin-top: 10px; font-weight: bold; color: #333; }
+    button { padding: 10px 20px; margin-top: 20px; border-radius: 5px; background: #007bff; color: #fff; border: none; cursor: pointer; }
+    .remove-btn { background: #dc3545; color: #fff; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h1>Your Cart</h1>
+  <div id="cart-items"></div>
+  <p id="cart-total"></p>
+
+  <button onclick="window.location.href='products.html'">Back to Products</button>
+  <button id="proceed-to-checkout" onclick="proceedToCheckout()">Proceed to Checkout</button>
+
+  <script>
+    const products = [
+      { id: 1, name: 'Sugar', price: 45 },
+      { id: 2, name: 'Chilli Powder', price: 320 },
+      { id: 3, name: 'Chicken Masala', price: 80 },
+      { id: 4, name: 'Mutton Masala', price: 95 },
+      { id: 5, name: 'Parachute Coconut Oil', price: 120 },
+      { id: 6, name: 'Iodized Salt', price: 20 },
+      { id: 7, name: 'Santhoor Soap', price: 35 },
+      { id: 8, name: 'Turmeric Powder', price: 280 },
+      { id: 9, name: 'Vim Dishwash Bar', price: 12 },
+      { id: 10, name: 'XXX Soap', price: 30 }
+    ];
+
+    const cartDiv = document.getElementById('cart-items');
+    const totalDiv = document.getElementById('cart-total');
+    const checkoutButton = document.getElementById('proceed-to-checkout');
+
+    let hasItems = false;
+    let total = 0;
+
+    products.forEach(product => {
+      const qty = parseInt(localStorage.getItem('cart-' + product.id) || '0');
+      if (qty > 0) {
+        hasItems = true;
+        const itemTotal = product.price * qty;
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `
+          <div class="cart-details">
+            <input type="checkbox" class="cart-checkbox" data-id="${product.id}" checked>
+            ${product.name} - ₹${product.price} × ${qty} = ₹${itemTotal}
+          </div>
+          <button class="remove-btn" onclick="removeItem(${product.id})">Remove</button>
+        `;
+        cartDiv.appendChild(itemDiv);
+
+        total += itemTotal;
+      }
+    });
+
+    if (hasItems) {
+      totalDiv.textContent = `Total: ₹${total}`;
+    } else {
+      cartDiv.textContent = 'Your cart is empty.';
+      totalDiv.textContent = '';
+      checkoutButton.style.display = 'none';
+    }
+
+    function removeItem(id) {
+      localStorage.removeItem('cart-' + id);
+      location.reload();
+    }
+
+    function proceedToCheckout() {
+      const selectedCheckboxes = document.querySelectorAll('.cart-checkbox:checked');
+      const selectedItems = [];
+
+      selectedCheckboxes.forEach(checkbox => {
+        const productId = parseInt(checkbox.getAttribute('data-id'));
+        const qty = parseInt(localStorage.getItem('cart-' + productId) || '0');
+        const product = products.find(p => p.id === productId);
+        if (product && qty > 0) {
+          selectedItems.push({ ...product, quantity: qty });
+        }
+      });
+
+      if (selectedItems.length === 0) {
+        alert('Please select at least one item to checkout.');
+        return;
+      }
+
+      localStorage.setItem('cartItems', JSON.stringify(selectedItems));
+      window.location.href = 'checkout.html?product=cart';
+    }
+  </script>
+
+</body>
+</html>

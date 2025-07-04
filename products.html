@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products - MyStore</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
+
+    nav {
+      background-color: #333;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+
+    nav .nav-left {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    nav .nav-right a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 15px;
+    }
+
+    nav .nav-right a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      color: #333;
+    }
+
+    .products-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 0 20px 40px;
+    }
+
+    .product {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 220px;
+      height: 380px; /* Fixed height */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .product img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .product h3 {
+      margin: 10px 0 5px;
+      color: #555;
+      font-size: 16px;
+      min-height: 40px;
+    }
+
+    .product p {
+      margin: 5px 0;
+      color: #777;
+      font-size: 14px;
+    }
+
+    .button-group {
+      margin-top: 10px;
+    }
+
+    .product button {
+      padding: 8px 12px;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    .add-btn { background: #007bff; color: #fff; }
+    .buy-btn { background: #28a745; color: #fff; }
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">MyStore</div>
+    <div class="nav-right">
+      <a href="index.html">Home</a>
+      <a href="cart.html">View Cart</a>
+      <a href="my_collections.html">My Collections</a>
+    </div>
+  </nav>
+
+  <h1>Our Products</h1>
+
+  <div class="products-container">
+
+    <div class="product">
+      <img src="sugar.webp" alt="Sugar">
+      <h3>Sugar</h3>
+      <p>₹45/kg</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(1)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(1)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="chilli-powder.webp" alt="Chilli Powder">
+      <h3>Chilli Powder</h3>
+      <p>₹320/kg</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(2)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(2)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="Chicken masala.webp" alt="Chicken Masala">
+      <h3>Chicken Masala</h3>
+      <p>₹80/100g</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(3)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(3)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="mutton masala.jpg" alt="Mutton Masala">
+      <h3>Mutton Masala</h3>
+      <p>₹95/100g</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(4)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(4)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="parachute.jpeg" alt="Parachute Coconut Oil">
+      <h3>Parachute Coconut Oil</h3>
+      <p>₹120/300ml</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(5)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(5)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="salt.cms" alt="Iodized Salt">
+      <h3>Iodized Salt</h3>
+      <p>₹20/kg</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(6)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(6)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="santhoor.webp" alt="Santhoor Soap">
+      <h3>Santhoor Soap</h3>
+      <p>₹35/100g</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(7)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(7)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="Turmaric powder.jpg" alt="Turmeric Powder">
+      <h3>Turmeric Powder</h3>
+      <p>₹280/kg</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(8)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(8)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="vim bar.webp" alt="Vim Dishwash Bar">
+      <h3>Vim Dishwash Bar</h3>
+      <p>₹12/bar</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(9)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(9)">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img src="xxx soap.jpg" alt="XXX Soap">
+      <h3>XXX Soap</h3>
+      <p>₹30/100g</p>
+      <div class="button-group">
+        <button class="add-btn" onclick="addToCart(10)">Add to Cart</button>
+        <button class="buy-btn" onclick="buyNow(10)">Buy Now</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function addToCart(id) {
+      const key = 'cart-' + id;
+      const currentQty = parseInt(localStorage.getItem(key) || '0');
+      localStorage.setItem(key, currentQty + 1);
+      alert('Product added to cart');
+    }
+
+    function buyNow(id) {
+      window.location.href = 'checkout.html?product=' + id;
+    }
+  </script>
+
+</body>
+</html>

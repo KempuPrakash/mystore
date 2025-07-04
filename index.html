@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to MyStore</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+    }
+    nav {
+      background-color: #333;
+      padding: 10px 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .main-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #28a745;
+      text-align: center;
+    }
+    .description {
+      margin: 20px 0;
+      color: #555;
+      font-size: 16px;
+      text-align: center;
+    }
+    .categories {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .category {
+      background: #f0f0f0;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 8px;
+      width: 180px;
+      text-align: center;
+    }
+    .form-box {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    #collections {
+      background: #fff0d5;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div><strong>MyStore</strong></div>
+    <div>
+      <a href="products.html">Products</a>
+      <a href="cart.html">My Cart</a>
+      <a href="my_collections.html">My Collections</a>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <h1 id="welcome-title">Welcome to MyStore</h1>
+    <p class="description">
+      MyStore is your one-stop general store offering daily essentials like groceries, snacks, personal care products,
+      beverages, and household items – all at affordable prices.
+    </p>
+
+    <div class="categories">
+      <div class="category">🧴 Personal Care</div>
+      <div class="category">🥫 Grocery</div>
+      <div class="category">🧹 Cleaning Supplies</div>
+      <div class="category">🍫 Snacks & Beverages</div>
+    </div>
+
+    <div class="form-box">
+      <form id="user-form" onsubmit="storeUserInfo();">
+        <input type="text" id="user-name" name="name" placeholder="Your Name" required>
+        <input type="email" id="user-email" name="email" placeholder="Your Email" required>
+        <input type="text" id="user-contact" name="contact" placeholder="Your Contact" required>
+        <button type="submit" id="user-submit">Enter Store</button>
+      </form>
+    </div>
+
+    <div id="collections"></div>
+  </div>
+
+  <script>
+    function storeUserInfo() {
+      event.preventDefault();
+      const name = document.getElementById('user-name').value;
+      const email = document.getElementById('user-email').value;
+      const contact = document.getElementById('user-contact').value;
+      localStorage.setItem('user', JSON.stringify({ name, email, contact }));
+      window.location.href = 'products.html';
+    }
+
+    const purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+    const container = document.getElementById('collections');
+    if (purchases.length > 0) {
+      let html = `<strong>🛍️ My Collections</strong><br>`;
+      purchases.slice(-3).forEach(p => {
+        html += `<div>${p.product.name} - ₹${p.product.price} via ${p.payment}</div>`;
+      });
+      container.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - MyStore</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .checkout-box { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 320px; text-align: center; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+    button { background: #28a745; color: #fff; border: none; cursor: pointer; }
+    h1 { margin-bottom: 15px; color: #333; }
+    p { font-size: 14px; color: #666; }
+  </style>
+</head>
+<body>
+
+  <div class="checkout-box">
+    <h1>Checkout</h1>
+    <p id="product-info"></p>
+
+    <form id="checkout-form" onsubmit="event.preventDefault(); completePurchase();">
+      <input type="text" id="checkout-name" placeholder="Your Name" required>
+      <input type="text" id="checkout-contact" placeholder="Your Contact" required>
+      <select id="checkout-payment" required>
+        <option value="">Select Payment Method</option>
+        <option value="Cash">Cash</option>
+        <option value="Card">Card</option>
+      </select>
+      <button type="submit">Pay</button>
+    </form>
+  </div>
+
+  <script>
+    const products = [
+      { id: 1, name: 'Sugar', price: 45 },
+      { id: 2, name: 'Chilli Powder', price: 320 },
+      { id: 3, name: 'Chicken Masala', price: 80 },
+      { id: 4, name: 'Mutton Masala', price: 95 },
+      { id: 5, name: 'Parachute Coconut Oil', price: 120 },
+      { id: 6, name: 'Iodized Salt', price: 20 },
+      { id: 7, name: 'Santhoor Soap', price: 35 },
+      { id: 8, name: 'Turmeric Powder', price: 280 },
+      { id: 9, name: 'Vim Dishwash Bar', price: 12 },
+      { id: 10, name: 'XXX Soap', price: 30 }
+    ];
+
+    const query = new URLSearchParams(window.location.search);
+    const productParam = query.get('product');
+    const productInfo = document.getElementById('product-info');
+
+    let selectedProduct = null;
+
+    if (productParam === 'cart') {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+      if (cartItems.length > 0) {
+        let total = 0;
+        cartItems.forEach(item => {
+          total += item.price * (item.quantity || 1);
+        });
+        productInfo.innerHTML = `You have ${cartItems.length} item(s) in your cart.<br>Total: ₹${total}`;
+        selectedProduct = 'cart';
+      } else {
+        productInfo.innerHTML = 'Your cart is empty.';
+        selectedProduct = null;
+      }
+    } else {
+      const productId = parseInt(productParam);
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        selectedProduct = product;
+        productInfo.innerHTML = `${product.name} - ₹${product.price}`;
+      } else {
+        productInfo.innerHTML = 'Product not found.';
+      }
+    }
+
+    function completePurchase() {
+      const name = document.getElementById('checkout-name').value.trim();
+      const contact = document.getElementById('checkout-contact').value.trim();
+      const payment = document.getElementById('checkout-payment').value;
+
+      if (!name || !contact || !payment) {
+        alert('Please fill out all fields.');
+        return;
+      }
+
+      const purchaseDetails = { name, contact, payment };
+
+      if (selectedProduct === 'cart') {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        if (cartItems.length === 0) {
+          alert('Your cart is empty.');
+          return;
+        }
+        purchaseDetails.cartItems = cartItems;
+      } else if (selectedProduct) {
+        purchaseDetails.product = selectedProduct;
+      } else {
+        alert('No valid product selected.');
+        return;
+      }
+
+      localStorage.setItem('lastPurchase', JSON.stringify(purchaseDetails));
+      window.location.href = 'thankyou.html';
+    }
+  </script>
+
+</body>
+</html>

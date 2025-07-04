@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You - MyStore</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .thankyou-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 450px;
+    }
+    h1 {
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    p {
+      margin: 5px 0;
+      color: #555;
+    }
+    .return-btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="thankyou-box">
+    <h1>Thank You for Your Purchase!</h1>
+    <div id="user-info"></div>
+
+    <table id="order-summary">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Price (₹)</th>
+          <th>Qty</th>
+          <th>Subtotal (₹)</th>
+        </tr>
+      </thead>
+      <tbody id="order-items"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3"><strong>Total</strong></td>
+          <td id="total-amount"></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <a href="products.html" class="return-btn">Return to Products</a>
+  </div>
+
+  <script>
+    const purchase = JSON.parse(localStorage.getItem('lastPurchase'));
+    const userInfoDiv = document.getElementById('user-info');
+    const itemsBody = document.getElementById('order-items');
+    const totalAmountTd = document.getElementById('total-amount');
+
+    if (purchase) {
+      userInfoDiv.innerHTML = `
+        <p><strong>Name:</strong> ${purchase.name}</p>
+        <p><strong>Contact:</strong> ${purchase.contact}</p>
+        <p><strong>Payment:</strong> ${purchase.payment}</p>
+      `;
+
+      let total = 0;
+      const purchasedItems = [];
+
+      if (purchase.cartItems && purchase.cartItems.length > 0) {
+        purchase.cartItems.forEach(item => {
+          const itemTotal = item.price * item.quantity;
+          itemsBody.innerHTML += `
+            <tr>
+              <td>${item.name}</td>
+              <td>₹${item.price}</td>
+              <td>${item.quantity}</td>
+              <td>₹${itemTotal}</td>
+            </tr>
+          `;
+          total += itemTotal;
+          purchasedItems.push({ name: item.name, price: item.price, quantity: item.quantity });
+        });
+
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('cart-')) localStorage.removeItem(key);
+        });
+
+      } else if (purchase.product) {
+        const itemTotal = purchase.product.price;
+        itemsBody.innerHTML += `
+          <tr>
+            <td>${purchase.product.name}</td>
+            <td>₹${purchase.product.price}</td>
+            <td>1</td>
+            <td>₹${itemTotal}</td>
+          </tr>
+        `;
+        total += itemTotal;
+        purchasedItems.push({ name: purchase.product.name, price: purchase.product.price, quantity: 1 });
+      }
+
+      totalAmountTd.textContent = `₹${total}`;
+
+      const previousPurchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+      previousPurchases.push({
+        name: purchase.name,
+        contact: purchase.contact,
+        payment: purchase.payment,
+        items: purchasedItems
+      });
+      localStorage.setItem('purchases', JSON.stringify(previousPurchases));
+
+    } else {
+      userInfoDiv.innerHTML = `<p>No purchase found.</p>`;
+      document.getElementById('order-summary').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
